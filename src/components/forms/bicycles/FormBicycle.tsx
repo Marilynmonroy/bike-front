@@ -1,16 +1,19 @@
 import { Customer, Order } from "@/interface";
 import Input from "../../Input";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import Titulo from "../../Tittle";
 import Button from "../../Button";
 import bikeAPI from "@/axios/instance";
 import Select from "@/components/Select";
 import CustomersData from "../customer/customersData";
+import toast from "react-hot-toast";
 
 interface formProps {
   order?: Order;
   customer?: Customer;
   onClose?: () => void;
+  isUpdate?: boolean;
+  onNextStep?: () => void;
 }
 
 export default function FormBicycle(props: formProps) {
@@ -33,7 +36,7 @@ export default function FormBicycle(props: formProps) {
       });
   }, []);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     const bicycle = {
       model,
@@ -41,16 +44,28 @@ export default function FormBicycle(props: formProps) {
       characteristics,
       customerEmail: select?.email,
     };
-
-    bikeAPI
-      .post("bicycles", bicycle)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((error) => {
-        console.error("Error al realizar la solicitud:", error);
-      });
-    alert("cliente cadastrado");
+    if (props.isUpdate) {
+      bikeAPI
+        .patch(`bicycles/${props.order?.bicycle?.id}`, bicycle)
+        .then((res) => {
+          toast.success("Bike actualizado con éxito");
+          props.onNextStep?.();
+        })
+        .catch((error) => {
+          toast.error("Error al actualizar a bike", error);
+        });
+    } else {
+      bikeAPI
+        .post("bicycles", bicycle)
+        .then((res) => {
+          console.log(res);
+          toast.success("Bike cadastrada com sucesso");
+          props.onClose?.();
+        })
+        .catch((error) => {
+          toast.error("Erro ao cadastrar a bike", error);
+        });
+    }
   };
 
   return (
@@ -117,7 +132,6 @@ export default function FormBicycle(props: formProps) {
         />
         <div className=" flex justify-end m-4">
           <Button
-            type=""
             onClick={() => props.onClose && props.onClose()}
             className="border border-slate-400 text-gray-900 px-4 py-2 rounded-md mr-2 hover:border-pink-400"
           >

@@ -20,7 +20,7 @@ export default function Register(props: loginProps) {
     const user = { username, password };
 
     bikeAPI
-      .post("register", user)
+      .post("user", user)
       .then((res) => {
         console.log(res);
         toast("usuário criado");

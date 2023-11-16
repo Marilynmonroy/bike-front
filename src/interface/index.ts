@@ -1,16 +1,20 @@
 export interface Order {
   id: number;
   description: string;
-  status: boolean;
+  status: Status;
   createdAt: string;
   updateAt: string;
-  value: string;
+  value: number;
   customerId: number;
   bicycleId: number;
   customer: Customer;
   bicycle: Bicycle;
 }
 
+export enum Status {
+  COMPLETED = "completed",
+  INCOMPLETE = "incomplete",
+}
 export interface Customer {
   id: number;
   name: string;

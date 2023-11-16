@@ -1,28 +1,27 @@
-import { Bicycle, Customer, Order } from "@/interface";
+import { Bicycle, Customer, Order, Status } from "@/interface";
 import Input from "../../Input";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import Titulo from "../../Tittle";
 import Button from "../../Button";
 import bikeAPI from "@/axios/instance";
 import Select from "@/components/Select";
-import CustomersData from "../customer/customersData";
-import BicycleData from "../bicycles/bicyclesData";
-
+import toast from "react-hot-toast";
 interface formProps {
   order?: Order;
   customer?: Customer;
   bicycle?: Bicycle;
   onClose?: () => void;
+  isUpdate?: boolean;
 }
 
 export default function FormOrder(props: formProps) {
   const [description, setDescription] = useState(
     props.order?.description ?? ""
   );
-  const [status, setStatus] = useState(
-    props.order?.status ? "completo" : "incompleto"
+  const [status, setStatus] = useState<Status>(
+    props.order?.status ?? Status.INCOMPLETE
   );
-  const [value, setValue] = useState(props.order?.value ?? "");
+  const [value, setValue] = useState(props.order?.value ?? 0);
   const [customerEmail, setCustomerEmail] = useState<Customer[] | null>(null);
   const [bicycleId, setBicycleId] = useState<Bicycle[] | null>(null);
   const [selectCustomer, setSelectCustomer] = useState<Customer | null>();
@@ -49,24 +48,39 @@ export default function FormOrder(props: formProps) {
       });
   }, []);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     const order = {
       description,
-      status: false,
+      status,
       value,
       customerEmail: selectCustomer?.email,
       bicycleId: selectBicycle?.id,
     };
 
-    bikeAPI
-      .post("orders", order)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((error) => {
-        console.error("Error al realizar la solicitud:", error);
-      });
+    if (props.isUpdate) {
+      bikeAPI
+        .patch(`orders/${props.order?.id}`, order)
+        .then((res) => {
+          console.log(res);
+          toast.success("Order atualizada com sucesso");
+          props.onClose?.();
+        })
+        .catch((error) => {
+          toast.error("Error al atualizar a ordem", error);
+        });
+    } else {
+      bikeAPI
+        .post("orders", order)
+        .then((res) => {
+          console.log(res);
+          toast.success("Ordem cadastrado com sucesso");
+          props.onClose?.();
+        })
+        .catch((error) => {
+          toast.error("Erro ao cadastrar a ordem", error);
+        });
+    }
   };
 
   return (
@@ -136,18 +150,20 @@ export default function FormOrder(props: formProps) {
 
           <div className="flex">
             <Select
-              onChange={setStatus}
+              id="status"
+              value={status}
+              onChange={(e) => setStatus(e.target.value as Status)}
+              className="m-4 w-6/12"
               tittle={"Status"}
               placeholder={"Status"}
-              className="m-4 w-6/12"
             >
-              <option value="">Incompleto</option>
-              <option value="">Completo</option>
+              <option value={Status.INCOMPLETE}>Incompleto</option>
+              <option value={Status.COMPLETED}>Completo</option>
             </Select>
 
             <Input
               onChange={setValue}
-              value={+value}
+              value={value}
               text={"Valor"}
               placeholder={"Valor"}
               type="text"

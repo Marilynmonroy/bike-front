@@ -3,7 +3,6 @@ import FormOrder from "./forms/orders/FormOrder";
 import FormBicycle from "./forms/bicycles/FormBicycle";
 import FormCustomer from "./forms/customer/FormCustomer";
 import Button from "./Button";
-import Modal from "@/components/Modal";
 import { useState } from "react";
 import Titulo from "./Tittle";
 
@@ -14,27 +13,14 @@ interface formProps {
 
 export default function Form(props: formProps) {
   const [step, setStep] = useState(0);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-
-    model: "",
-    color: "",
-    characteristics: "",
-
-    description: "",
-    status: "",
-    value: 0,
-  });
   const FormTitles = ["Clientes", "Bikes", "Detalhes"];
   const StepDisplay = () => {
     if (step === 0) {
-      return <FormCustomer />;
+      return <FormCustomer isUpdate={true} />;
     } else if (step === 1) {
-      return <FormBicycle />;
+      return <FormBicycle isUpdate={true} />;
     } else {
-      return <FormOrder />;
+      return <FormOrder isUpdate={true} />;
     }
   };
 
@@ -66,7 +52,6 @@ export default function Form(props: formProps) {
               className="bg-pink-600 text-white px-4 py-2 rounded-md hover:bg-pink-500"
               onClick={() => {
                 if (step === FormTitles.length - 1) {
-                  console.log(formData);
                   alert("Ordem feita");
                 } else {
                   setStep((currStep) => currStep + 1);

@@ -23,7 +23,7 @@ export default function Login(props: loginProps) {
     const user = { username, password };
 
     try {
-      const response = await bikeAPI.post("login", user);
+      const response = await bikeAPI.post("auth/login", user);
       toast("Bem-vindo ao sistema");
       const token = response.data.accessToken;
       document.cookie = `access_token=${token}; path=/`;

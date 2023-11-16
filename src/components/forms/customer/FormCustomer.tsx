@@ -4,10 +4,13 @@ import { FormEvent, useState } from "react";
 import Titulo from "../../Tittle";
 import Button from "../../Button";
 import bikeAPI from "@/axios/instance";
+import toast from "react-hot-toast";
 
 interface formProps {
   order?: Order;
   onClose?: () => void;
+  isUpdate?: boolean;
+  onNextStep?: () => void;
 }
 
 export default function FormCustomer(props: formProps) {
@@ -19,15 +22,28 @@ export default function FormCustomer(props: formProps) {
     e.preventDefault();
     const customer = { name, email, phone };
 
-    bikeAPI
-      .post("customers", customer)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((error) => {
-        console.error("Error al realizar la solicitud:", error);
-      });
-    alert("cliente cadastrado");
+    if (props.isUpdate) {
+      bikeAPI
+        .patch(`customers/${props.order?.customer?.id}`, customer)
+        .then((res) => {
+          toast.success("Cliente actualizado con éxito");
+          props.onNextStep?.();
+        })
+        .catch((error) => {
+          toast.error("Error al actualizar el cliente", error);
+        });
+    } else {
+      bikeAPI
+        .post("customers", customer)
+        .then((res) => {
+          console.log(res);
+          toast.success("Cliente creado con éxito");
+          props.onClose?.();
+        })
+        .catch((error) => {
+          toast.error("Error al crear el cliente", error);
+        });
+    }
   };
 
   return (
@@ -68,12 +84,12 @@ export default function FormCustomer(props: formProps) {
         </div>
         <div className=" flex justify-end m-4">
           <Button
-            type=""
             onClick={() => props.onClose?.()}
             className="border border-slate-400 text-gray-900 px-4 py-2 rounded-md mr-2 hover:border-pink-400"
           >
             Sair
           </Button>
+
           <Button
             type="submit"
             className="bg-pink-600 text-white px-4 py-2 rounded-md"

@@ -1,16 +1,22 @@
 import { Order } from "@/interface";
 import { FiEdit, FiTrash2, FiDownload } from "react-icons/fi";
+import { MdOutlineMailOutline } from "react-icons/md";
 
 interface TabelaProps {
   orders?: Order[];
   orderUpdate?: (order: Order) => void;
   orderDelete?: (order: Order) => void;
   orderDownload?: (order: Order) => void;
+  orderEmail?: (order: Order) => void;
 }
 
 export default function Table(props: TabelaProps) {
   const viewActions =
-    props.orderDelete || props.orderDownload || props.orderUpdate;
+    props.orderDelete ||
+    props.orderDownload ||
+    props.orderUpdate ||
+    props.orderEmail;
+
   function renderAction(order: Order) {
     return (
       <td className="flex p-4 justify-center items-center">
@@ -45,6 +51,18 @@ export default function Table(props: TabelaProps) {
             className={` text-blue-600 rounded-full p-2 m-1 hover:bg-green-50`}
           >
             <FiDownload />
+          </button>
+        ) : (
+          false
+        )}
+
+        {/*Enviar email*/}
+        {props.orderEmail ? (
+          <button
+            onClick={() => props.orderEmail?.(order)}
+            className={` text-blue-600 rounded-full p-2 m-1 hover:bg-green-50`}
+          >
+            <MdOutlineMailOutline />
           </button>
         ) : (
           false
