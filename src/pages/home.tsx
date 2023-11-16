@@ -1,16 +1,18 @@
-import Button from "@/components/Button";
 import "../styles/globals.css";
+import Button from "@/components/Button";
 import Layout from "@/components/Layout";
 import Table from "@/components/Table";
 import FormCustomer from "@/components/forms/customer/FormCustomer";
 import FormBicycle from "@/components/forms/bicycles/FormBicycle";
 import { Order } from "@/interface";
-import Modal from "@/components/modal";
+import Modal from "@/components/Modal";
 import { useEffect, useState } from "react";
 import bikeAPI from "@/axios/instance";
 import FormOrder from "@/components/forms/orders/FormOrder";
+import { useAuth } from "@/hooks/auth.hook";
 
 export default function Home() {
+  //useAuth();
   //Hooks
   const [modal, setModal] = useState(false);
   const [data, setData] = useState();
@@ -26,7 +28,7 @@ export default function Home() {
   }, []);
 
   //Funcion actions
-  function orderSelected(order: Order) {
+  function orderUpdate(order: Order) {
     console.log(order.customer);
     setModal(true);
   }
@@ -88,7 +90,7 @@ export default function Home() {
             </div>
             <Table
               orders={data}
-              orderSelect={orderSelected}
+              orderUpdate={orderUpdate}
               orderDelete={orderDeleted}
               orderDownload={orderDownload}
             />

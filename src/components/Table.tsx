@@ -3,21 +3,21 @@ import { FiEdit, FiTrash2, FiDownload } from "react-icons/fi";
 
 interface TabelaProps {
   orders?: Order[];
-  orderSelect?: (order: Order) => void;
+  orderUpdate?: (order: Order) => void;
   orderDelete?: (order: Order) => void;
   orderDownload?: (order: Order) => void;
 }
 
 export default function Table(props: TabelaProps) {
   const viewActions =
-    props.orderDelete || props.orderDownload || props.orderSelect;
+    props.orderDelete || props.orderDownload || props.orderUpdate;
   function renderAction(order: Order) {
     return (
       <td className="flex p-4 justify-center items-center">
         {/* orden seleccionada */}
-        {props.orderSelect ? (
+        {props.orderUpdate ? (
           <button
-            onClick={() => props.orderSelect?.(order)}
+            onClick={() => props.orderUpdate?.(order)}
             className={` text-green-600 rounded-full p-2 m-1 hover:bg-green-50`}
           >
             <FiEdit />

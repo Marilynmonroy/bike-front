@@ -5,32 +5,29 @@ import Button from "@/components/Button";
 import { FormEvent, useState } from "react";
 import { User } from "@/interface";
 import bikeAPI from "@/axios/instance";
-import Link from "next/link";
 import toast, { Toaster } from "react-hot-toast";
-import router, { useRouter } from "next/router";
 
 interface loginProps {
   user: User;
 }
 
-export default function Login(props: loginProps) {
-  const router = useRouter();
+export default function Register(props: loginProps) {
   const [username, setUsername] = useState(props.user?.username ?? "");
   const [password, setPassword] = useState(props.user?.password ?? "");
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     const user = { username, password };
 
-    try {
-      const response = await bikeAPI.post("login", user);
-      toast("Bem-vindo ao sistema");
-      const token = response.data.accessToken;
-      document.cookie = `access_token=${token}; path=/`;
-      router.push("/home");
-    } catch (error) {
-      console.error("Error al realizar la solicitud:", error);
-    }
+    bikeAPI
+      .post("register", user)
+      .then((res) => {
+        console.log(res);
+        toast("usuário criado");
+      })
+      .catch((error) => {
+        console.error("Erro na solicitação:", error);
+      });
   };
 
   return (
@@ -40,7 +37,7 @@ export default function Login(props: loginProps) {
     `}
     >
       <div className="flex justify-center items-center h-screen">
-        <Layout titulo={"Login"}>
+        <Layout titulo={"Registrar"}>
           <form onSubmit={handleSubmit}>
             <div className="m-2">
               <Input
@@ -64,18 +61,10 @@ export default function Login(props: loginProps) {
                 type="submit"
                 className={`m-2 bg-pink-600 text-white px-4 py-2 rounded-md`}
               >
-                Entrar
+                Criar
               </Button>
             </div>
           </form>
-          <div className="text-center">
-            <span className="text-sm w-2/3 text-center text-gray-500">
-              Registre um novo{" "}
-              <Link className="text-green-700 font-semibold" href="/register">
-                usuário
-              </Link>
-            </span>
-          </div>
         </Layout>
       </div>
     </div>

@@ -1,7 +1,7 @@
 import { Order } from "@/interface";
 import Input from "../../Input";
 import { FormEvent, useState } from "react";
-import Titulo from "../../Titulo";
+import Titulo from "../../Tittle";
 import Button from "../../Button";
 import bikeAPI from "@/axios/instance";
 

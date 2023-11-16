@@ -1,4 +1,4 @@
-import Titulo from "./Titulo";
+import Titulo from "./Tittle";
 
 interface LayoutProps {
   titulo: string;
@@ -9,7 +9,7 @@ export default function Layout(props: LayoutProps) {
   return (
     <div
       className={`
-    flex flex-col w-2/3 bg-white text-gray-800
+    flex flex-col w-auto bg-white text-gray-800
     rounded-md
     `}
     >

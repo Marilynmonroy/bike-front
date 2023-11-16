@@ -3,9 +3,9 @@ import FormOrder from "./forms/orders/FormOrder";
 import FormBicycle from "./forms/bicycles/FormBicycle";
 import FormCustomer from "./forms/customer/FormCustomer";
 import Button from "./Button";
-import Modal from "@/components/modal";
+import Modal from "@/components/Modal";
 import { useState } from "react";
-import Titulo from "./Titulo";
+import Titulo from "./Tittle";
 
 interface formProps {
   order?: Order;

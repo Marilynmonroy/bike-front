@@ -26,3 +26,11 @@ export interface Bicycle {
   characteristics: string;
   customerEmail: string;
 }
+
+export interface User {
+  id: number;
+  username: string;
+  password: string;
+  createdAt: string;
+  updateAt: string;
+}
