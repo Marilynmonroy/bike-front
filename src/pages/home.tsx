@@ -11,6 +11,7 @@ import FormOrder from "@/components/forms/orders/FormOrder";
 import { useAuth } from "@/hooks/auth.hook";
 import UserMenu from "@/components/User";
 import Modal from "@/components/Modal";
+import { AxiosResponse } from "axios";
 
 export default function Home() {
   useAuth();
@@ -55,6 +56,9 @@ export default function Home() {
         }}
       />
     );
+    bikeAPI.get("orders").then((res) => {
+      setData(res.data);
+    });
     setModal(true);
   }
 
@@ -73,7 +77,22 @@ export default function Home() {
   }
 
   function orderDownload(order: Order) {
-    console.log(order.customer);
+    bikeAPI
+      .get(`orders/${order.id}/downloadPdf`, { responseType: "blob" })
+      .then((res: AxiosResponse<Blob>) => {
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "output.pdf");
+        document.body.appendChild(link);
+        link.click();
+
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(link);
+      })
+      .catch((error) => {
+        console.error("Error al eliminar la orden:", error);
+      });
   }
 
   function orderEmail(order: Order) {}

@@ -6,7 +6,6 @@ import Button from "../../Button";
 import bikeAPI from "@/axios/instance";
 import Select from "@/components/Select";
 import CustomersData from "../customer/customersData";
-import toast from "react-hot-toast";
 
 interface formProps {
   order?: Order;
@@ -48,22 +47,22 @@ export default function FormBicycle(props: formProps) {
       bikeAPI
         .patch(`bicycles/${props.order?.bicycle?.id}`, bicycle)
         .then((res) => {
-          toast.success("Bike actualizado con éxito");
+          alert(`Bike atualizada com sucesso ${res}`);
           props.onNextStep?.();
         })
         .catch((error) => {
-          toast.error("Error al actualizar a bike", error);
+          alert("Erro ao atualizar a bike");
         });
     } else {
       bikeAPI
         .post("bicycles", bicycle)
         .then((res) => {
           console.log(res);
-          toast.success("Bike cadastrada com sucesso");
+          alert("Bike cadastrada com sucesso");
           props.onClose?.();
         })
         .catch((error) => {
-          toast.error("Erro ao cadastrar a bike", error);
+          alert("Erro ao cadastrar a bike");
         });
     }
   };
