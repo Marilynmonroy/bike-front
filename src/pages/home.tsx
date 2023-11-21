@@ -4,14 +4,13 @@ import Layout from "@/components/Layout";
 import Table from "@/components/Table";
 import FormCustomer from "@/components/forms/customer/FormCustomer";
 import FormBicycle from "@/components/forms/bicycles/FormBicycle";
-import { Order } from "@/interface";
+import { Customer, Order } from "@/interface";
 import { useEffect, useState } from "react";
 import bikeAPI from "@/axios/instance";
 import FormOrder from "@/components/forms/orders/FormOrder";
 import { useAuth } from "@/hooks/auth.hook";
-import UserMenu from "@/components/User";
 import Modal from "@/components/Modal";
-import { AxiosResponse } from "axios";
+import Logout from "@/components/Logout";
 
 export default function Home() {
   useAuth();
@@ -76,34 +75,33 @@ export default function Home() {
       });
   }
 
-  function orderDownload(order: Order) {
-    bikeAPI
-      .get(`orders/${order.id}/downloadPdf`, { responseType: "blob" })
-      .then((res: AxiosResponse<Blob>) => {
-        const url = window.URL.createObjectURL(new Blob([res.data]));
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute("download", "output.pdf");
-        document.body.appendChild(link);
-        link.click();
+  function orderDownload(order: Order) {}
 
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(link);
+  function orderEmail(order: Order) {
+    bikeAPI
+      .post(
+        "orders/email",
+        { id: order.id, customerEmail: order.customer?.email },
+        { timeout: 5000 }
+      )
+      .then((res) => {
+        console.log(res);
+        alert("Email enviado com sucesso");
       })
       .catch((error) => {
-        console.error("Error al eliminar la orden:", error);
+        console.log(error);
+        alert(error);
       });
   }
-
-  function orderEmail(order: Order) {}
-
   return (
     <div
       className={`flex flex-col h-screen
       bg-gray-900 text-white p-10
     `}
     >
-      <div></div>
+      <div>
+        <Logout />
+      </div>
       <div className="flex justify-center items-center h-screen">
         <Layout titulo="Ordens bikes">
           <div className="grid grid-cols-6 m-4">

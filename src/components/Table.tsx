@@ -1,4 +1,4 @@
-import { Order } from "@/interface";
+import { Customer, Order } from "@/interface";
 import { FiEdit, FiTrash2, FiDownload } from "react-icons/fi";
 import { MdOutlineMailOutline } from "react-icons/md";
 
